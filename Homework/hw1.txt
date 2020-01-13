@@ -1,0 +1,23 @@
+def fab(n):
+    if n <= 2:
+        return 1
+    else:
+        return fab(n-1) + fab(n-2) * fab(n-3)
+
+
+For this exponential function, we see that for each n in fab(n), we get a total big O complexity of around 3^n. Each call to fab() increases the total calls by 3, thus tripling the work done by each function call at each level, making the big O 3^n. We can compare the fab() function to the fibonacci function analysis on page 14 to show this concept as well.
+
+
+def linFab(n):
+  fn = f1 = f2 = f3 = 1
+  if n <= 2:
+    return 1
+  else:
+    for x in range(2, n):
+      fn = f1 + f2 * f3
+      f3 = f2
+      f2 = f1
+      f1 = fn
+  return fn
+
+For this linear function of the fabinocci function, we see that for each n > 2, we get a single addition and a single mulitplication for n - 2 iterations. For example, if n = 3, we will only ever get n - 2 addition and mulitplications, so we only will ever add and mulitply once. If n = 10, the same analysis holds because we will have 8 additions and 8 multiplications. If n <= 2, then not a single multiplication or addition will be used.
