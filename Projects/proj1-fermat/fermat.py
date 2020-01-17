@@ -7,17 +7,25 @@ def prime_test(N, k):
 
 
 def mod_exp(x, y, N):
-    # You will need to implement this function and change the return value.   
-    return 1
-    
+    if y==0:
+        return 1
+    z = modexp(x, y//2, N)
+    if y % 2 == 0:      #y is even
+        return (z**2) % N
+    else:               #y is odd
+        return x * (z**2) % N
+
+
 
 def fprobability(k):
-    # You will need to implement this function and change the return value.   
-    return 0.0
+    # probability of the primality working first try is 1/2, and as shown in
+    # class, multiple goes at the formula increases this probability by 1/2^x
+    # where x is the number of values picked.
+    return 1/(2**k)
 
 
 def mprobability(k):
-    # You will need to implement this function and change the return value.   
+    # You will need to implement this function and change the return value.
     return 0.0
 
 
