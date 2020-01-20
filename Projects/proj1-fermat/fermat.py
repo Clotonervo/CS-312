@@ -36,6 +36,13 @@ def run_fermat(N,k):
     # To generate random values for a, you will most likley want to use
     # random.randint(low,hi) which gives a random integer between low and
     #  hi, inclusive.
+
+    for number in range(0, k)
+        a = random.randint(0, N-1)
+        if mod_exp(a, N-1, N) == 1: #If mod_exp returns 1, then it is still prime, and we test again
+            continue
+        else:                       #If mod_exp != 1, then it is composite
+            return 'composite'
     return 'prime'
 
 
@@ -46,4 +53,7 @@ def run_miller_rabin(N,k):
     # To generate random values for a, you will most likley want to use
     # random.randint(low,hi) which gives a random integer between low and
     #  hi, inclusive.
+
+    for number in range(0, k)
+        
     return 'composite'
