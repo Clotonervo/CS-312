@@ -9,7 +9,7 @@ def prime_test(N, k):
 def mod_exp(x, y, N):
     if y==0:
         return 1
-    z = modexp(x, y//2, N)
+    z = mod_exp(x, y//2, N)
     if y % 2 == 0:      #y is even
         return (z**2) % N
     else:               #y is odd
@@ -18,26 +18,21 @@ def mod_exp(x, y, N):
 
 
 def fprobability(k):
-    # probability of the primality working first try is 1/2, and as shown in
+    # probability of fermat's theorm being correct is 1/2, and as shown in
     # class, multiple goes at the formula increases this probability by 1/2^x
     # where x is the number of values picked.
     return 1/(2**k)
 
 
 def mprobability(k):
-    # You will need to implement this function and change the return value.
-    return 0.0
+    # probability of miller_rabin's theorm being correct is 3/4, and as shown in
+    # class, multiple goes at the formula increases this probability by 3/4^x
+    # where x is the number of values picked.
+    return 3/(4**k) #CHECK THIS
 
 
 def run_fermat(N,k):
-    # You will need to implement this function and change the return value, which should be
-    # either 'prime' or 'composite'.
-    #
-    # To generate random values for a, you will most likley want to use
-    # random.randint(low,hi) which gives a random integer between low and
-    #  hi, inclusive.
-
-    for number in range(0, k)
+    for number in range(0, k):
         a = random.randint(0, N-1)
         if mod_exp(a, N-1, N) == 1: #If mod_exp returns 1, then it is still prime, and we test again
             continue
@@ -54,6 +49,6 @@ def run_miller_rabin(N,k):
     # random.randint(low,hi) which gives a random integer between low and
     #  hi, inclusive.
 
-    for number in range(0, k)
-        
+    # for number in range(0, k)
+
     return 'composite'
