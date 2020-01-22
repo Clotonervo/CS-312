@@ -21,19 +21,19 @@ def fprobability(k):
     # probability of fermat's theorm being correct is 1/2, and as shown in
     # class, multiple goes at the formula increases this probability by 1/2^x
     # where x is the number of values picked.
-    return 1/(2**k)
+    return 1- (1/(2**k))
 
 
 def mprobability(k):
     # probability of miller_rabin's theorm being correct is 3/4, and as shown in
     # class, multiple goes at the formula increases this probability by 3/4^x
     # where x is the number of values picked.
-    return 3/(4**k) #CHECK THIS
+    return 1-(1/(4**k))
 
 
 def run_fermat(N,k):
     for number in range(0, k):
-        a = random.randint(0, N-1)
+        a = random.randint(2, N-1)
         if mod_exp(a, N-1, N) == 1: #If mod_exp returns 1, then it is still prime, and we test again
             continue
         else:                       #If mod_exp != 1, then it is composite
@@ -49,6 +49,15 @@ def run_miller_rabin(N,k):
     # random.randint(low,hi) which gives a random integer between low and
     #  hi, inclusive.
 
-    # for number in range(0, k)
+    for number in range(0, k):
+        a = random.randint(2, N-1)
+        x = (N-1) * 2
 
-    return 'composite'
+        while x > 1 and x % 2 == 0:
+            x = x/2
+            if mod_exp(a, x, N) == 1 or mod_exp(a, x, N) == N-1:
+                continue
+            else:
+                return 'composite'
+
+    return 'prime'
