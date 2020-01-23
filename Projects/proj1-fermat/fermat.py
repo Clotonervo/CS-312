@@ -42,8 +42,8 @@ def run_miller_rabin(N,k):
         x = (N-1)
 
         while x > 1 and x % 2 == 0:
+            x = x/2
             if mod_exp(a, x, N) == 1 or mod_exp(a, x, N) == N-1:
-                x = x/2
                 continue
             else:
                 return 'composite'
