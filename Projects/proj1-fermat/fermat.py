@@ -26,7 +26,7 @@ def mprobability(k):
 
 
 def run_fermat(N,k):
-    for number in range(0, k):
+    for number in range(k):
         a = random.randint(2, N-1)
         if mod_exp(a, N-1, N) == 1: #If mod_exp returns 1, then it is still prime, and we test again
             continue
@@ -36,16 +36,16 @@ def run_fermat(N,k):
 
 
 def run_miller_rabin(N,k):
-
-    for number in range(0, k):
+    if N % 2 == 0:
+        return 'composite'
+    for number in range(k):
         a = random.randint(1, N-1)
         x = (N-1)
-
         while x > 1 and x % 2 == 0:
-            x = x/2
-            if mod_exp(a, x, N) == 1 or mod_exp(a, x, N) == N-1:
-                continue
+            if mod_exp(a, x, N) == 1:
+                x = x/2
+            elif mod_exp(a,x,N) == N-1:
+                break
             else:
                 return 'composite'
-
     return 'prime'
