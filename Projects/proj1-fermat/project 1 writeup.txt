@@ -1,0 +1,27 @@
+
+Time and Space complexity for my code:
+
+prime_test(N, k):
+	This is the big function of the program, the one that calls both the fermat test and the miller rabin test. This function runs in total O(n^4) time with a space complexity of O(n). This comes from the space complexity of the run_miller_rabin() and the space complexity of mod_exp() when that is called.
+
+mod_exp(x, y, N):
+	mod_exp() runs in O(n^3) time and O(n) space. The O(n) space comes from the recursion, creating constant variables in the first call, but then recursing up to n times. Time complexity is given from the bit shifts near the end of the function (O(n^2)), given that we have n bits for input, we reach a total big O of O(n^3) (O(n^2) * O(n)).
+
+
+run_fermat(N, k):
+	run_fermat() runs in O(n^3) time and O(n) space. The O(n) space comes from the recursion in mod_exp(), as other than that we have constant space complexity. Time complexity comes from the recusion of mod_exp(), which as previously explained, runs in O(n^3) times. While technically run_fermat() runs in O(k * n^3) time, we can simplify this to O(n^3) because k is a constant.
+
+
+run_miller_rabin(N,k):
+	run_miller_rabin() runs in O(n^4) time and O(n) space. The O(n) space comes from the recursion of mod_exp(), as other than that we have constant space complexity. Time complexity comes from the recursion of mod_exp(), which runs in O(n^3) as previously explained, and from the while loop, which has a time complexity of O(n). O(n^3) * O(n) = O(n^4). 
+
+
+
+Probability of p correctness:
+
+fprobability(k): 
+	The Fermat algorithm has a 1/2 chance of being incorrect after its initial run, so we simply exponentiate that probability to the k to get the probability we are wrong after k trials, and subtract that from 1. For example, after 12 runs, the probability that we are incorrect is 1/(2^12), so by subtracting that from 1, we get the probability that we are correct after 12 runs.
+
+
+mprobability(k):
+	The Miller Rabin algorithm has a 1/4 chance of being incorrect after its initial run, so we simply multiply that probability to the k to get the probability we are wrong after k trials, and subtract that from 1. For example, after 12 runs, the probability that we are incorrect is 1/(4^12), so by subtracting that from 1, we get the probability that we are correct after 12 runs.
