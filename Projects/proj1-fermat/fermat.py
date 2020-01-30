@@ -18,15 +18,15 @@ def mod_exp(x, y, N):   # Runs in O(n^3), assuming we have n bits for input, O(n
 # The Fermat algorithm has a 1/2 chance of being incorrect after its initial run, so
 # we simply multiply that probability to the k to get the probability we are wrong after k trials,
 # and subtract that from 1
-def fprobability(k):    # Runs in O(n^2) time, while space complexity is O(1)
-    return 1-(1/(2**k)) # Division is O(n^2), while subtraction and division are O(n) and O(2n)
+def fprobability(k):    # Runs in O(1) time, while space complexity is O(1)
+    return 1-(1/(2**k)) # Because k is small compared to N, we can just say it runs in O(1) time
 
 
 # The Miller Rabin algorithm has a 1/4 chance of being incorrect after its initial run, so
 # we simply multiply that probability to the k to get the probability we are wrong after k trials,
 # and subtract that from 1
-def mprobability(k):    # Runs in O(n^2) time, while space complexity is O(1)
-    return 1-(1/(4**k)) # Division is O(n^2), while subtraction and division are O(n) and O(2n)
+def mprobability(k):    # Runs in O(1) time, while space complexity is O(1)
+    return 1-(1/(4**k)) # Because k is small compared to N, we can just say it runs in O(1) time
 
 
 def run_fermat(N,k):        # Runs in O(n^3) time, but O(n) space
