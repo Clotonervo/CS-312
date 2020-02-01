@@ -1,15 +1,45 @@
 
-def divideAndConquer():
-    print("In divideAndConquer function");
+def getClosestRightPoint(points)
+    return points[length(points)]
+
+
+def getClosestLeftPoint(points)
+    return points[0]
+
+def getUpperTangent(leftPoint, rightPoint, leftList, rightList)
+    leftStart = leftPoint
+    rightStart = rightStart
+
+
+    
+
     return
 
-def merge():
+
+def merge(leftSide, rightSide):
+    leftPoint = rightSide.index(getClosestLeftPoint(rightSide))
+    rightPoint = leftSide.index(getClosestRightPoint(leftSide))
+
+
+
     print("In the Merge algorithm")
     return
 
+
+
+
+def divideAndConquer(sortedPoints):
+    if length(sortedPoints) < 4:        # This will mean that when there are only 3 or less points will we start combining
+        return sortedPoints
+    else:
+        leftSide = divideAndConquer([:len(sortedPoints)//2])
+        rightSide = divideAndConquer([len(sortedPoints)//2:])
+
+        return merge(leftSide, rightSide)
+
+
 from PyQt5.QtCore import QLineF, QPointF, QThread, pyqtSignal
 
-    # PyQt5.QtCore.__lt__ = lambda self, other: self.x() < other.x()
 
 
 import time
@@ -54,7 +84,6 @@ class ConvexHullSolverThread(QThread):
         print('Time Elapsed (Sorting): {:3.3f} sec'.format(t2-t1))
 
         t3 = time.time()
-        # TODO: COMPUTE THE CONVEX HULL USING DIVIDE AND CONQUER
         divideAndConquer()
         t4 = time.time()
 
