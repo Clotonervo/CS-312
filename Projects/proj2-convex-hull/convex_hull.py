@@ -1,11 +1,16 @@
 
 
 def divideAndConquer(self, sortedPoints):
+    # print("***********************")
+    # print("sortedPoints = ", len(sortedPoints))
     if len(sortedPoints) < 4:        # This will mean that when there are only 3 or less points will we start combining
         return sortedPoints
     else:
         leftSide = divideAndConquer(self, sortedPoints[:len(sortedPoints)//2])
         rightSide = divideAndConquer(self, sortedPoints[len(sortedPoints)//2:])
+
+        # print("leftSide = ", len(leftSide))
+        # print("rightSide = ", len(rightSide))
 
         return merge(self, leftSide, rightSide)
 
@@ -14,7 +19,7 @@ def divideAndConquer(self, sortedPoints):
 def getClosestRightPoint(points):
         index = 0;
         xPoint = points[0].x();
-        for i in range(len(points) - 1):
+        for i in range(len(points)):
             if (points[i].x() > xPoint):
                 xPoint = points[i].x()
                 index = i
@@ -30,7 +35,7 @@ def getClosestLeftPoint(points):
             index = i
     return index
 
-def getUpperTangent(leftStart, rightStart, leftList, rightList):
+def getUpperTangent(self, leftStart, rightStart, leftList, rightList):
     currentSlope = getSlope(leftList[leftStart], rightList[rightStart])
     rightLength = len(rightList)
     leftLength = len(leftList)
@@ -40,15 +45,21 @@ def getUpperTangent(leftStart, rightStart, leftList, rightList):
     currentLeftTangent = leftStart
     leftPoint = leftStart
     rightPoint = rightStart
+    # print("Initial LeftPoint = ", leftPoint)
+    # print("Initial RightPoint = ", rightPoint)
+    # print("Initial Slope = ", currentSlope)
 
-
+    # polygonLeft = [QLineF(leftList[leftStart], rightList[rightStart])]
+    # assert( type(polygonLeft) == list and type(polygonLeft[0]) == QLineF )
+    # self.show_hull.emit(polygonLeft,(0,0,0))
 
     while True:
         slopeIncreasing = True
         slopeDecreasing = True
 
         while slopeIncreasing:
-            nextPointSlope = getSlope(leftList[currentLeftTangent], rightList[(rightPoint + 1) % rightLength])
+            nextPointSlope = getSlope(leftList[leftPoint], rightList[(rightPoint + 1) % rightLength])
+            # print("nextPointSlope = ", nextPointSlope)
 
             if nextPointSlope > currentSlope:
                 currentSlope = nextPointSlope
@@ -59,31 +70,100 @@ def getUpperTangent(leftStart, rightStart, leftList, rightList):
                 slopeIncreasing = False
 
         # return currentLeftTangent, rightPoint
+        # print("now Slope = ", currentSlope)
 
         while slopeDecreasing:
-            leftPoint = leftPoint + 1
-            nextPointSlope = getSlope(leftList[(leftPoint + 1) % leftLength], rightList[rightPoint])
-            print("LeftPoint = ",leftPoint)
+            nextPointSlope = getSlope(leftList[(leftPoint - 1) % leftLength], rightList[rightPoint])
 
             if nextPointSlope < currentSlope:
                 currentSlope = nextPointSlope;
-                leftPoint = (leftPoint + 1) % leftLength
+                leftPoint = (leftPoint - 1) % leftLength
                 slopeDecreasing = True
 
             else:
                 slopeDecreasing = False
 
-        return leftPoint, rightPoint
+        # return leftPoint, rightPoint
+        # print("LeftPoint = ", leftPoint)
+        # print("RightPoint = ", rightPoint)
 
-        if rightPoint == currentRightTangent and leftPoint == currentLeftTangent:
+        if (rightPoint == currentRightTangent) and (leftPoint == currentLeftTangent):
+            # print("not looping again")
             return leftPoint, rightPoint
         else:
+            # print("looping again in upper tangent")
+
+            currentRightTangent = rightPoint
+            currentLeftTangent = leftPoint
+
+def getLowerTangent(self, leftStart, rightStart, leftList, rightList):
+    # print("****************************")
+    currentSlope = getSlope(leftList[leftStart], rightList[rightStart])
+    rightLength = len(rightList)
+    leftLength = len(leftList)
+    slopeIncreasing = True
+    slopeDecreasing = True
+    currentRightTangent = rightStart
+    currentLeftTangent = leftStart
+    leftPoint = leftStart
+    rightPoint = rightStart
+
+    # print("Initial LeftPoint = ", leftStart)
+    # print("Initial RightPoint = ", rightStart)
+    # print("Initial Slope = ", currentSlope)
+    #
+    # polygonLeft = [QLineF(leftList[leftStart], rightList[rightStart])]
+    # assert( type(polygonLeft) == list and type(polygonLeft[0]) == QLineF )
+    # self.show_hull.emit(polygonLeft,(0,0,0))
+
+    while True:
+        slopeIncreasing = True
+        slopeDecreasing = True
+
+        while slopeDecreasing:
+            nextPointSlope = getSlope(leftList[leftPoint], rightList[(rightPoint - 1) % rightLength])
+            # print("nextPointSlope = ", nextPointSlope)
+
+            if nextPointSlope < currentSlope:
+                currentSlope = nextPointSlope
+                rightPoint = (rightPoint - 1) % rightLength
+                slopeDecreasing = True
+
+            else:
+                slopeDecreasing = False
+
+        # return currentLeftTangent, rightPoint
+        # print("now Slope = ", currentSlope)
+
+        while slopeIncreasing:
+            nextPointSlope = getSlope(leftList[(leftPoint + 1) % leftLength], rightList[rightPoint])
+
+            if nextPointSlope > currentSlope:
+                currentSlope = nextPointSlope;
+                leftPoint = (leftPoint + 1) % leftLength
+                slopeIncreasing = True
+
+            else:
+                slopeIncreasing = False
+
+        # return leftPoint, rightPoint
+        # print("LeftPoint = ", leftPoint)
+        # print("RightPoint = ", rightPoint)
+
+        if (rightPoint == currentRightTangent) and (leftPoint == currentLeftTangent):
+            # print("not looping again")
+            return leftPoint, rightPoint
+        else:
+            # print("looping again in upper tangent")
+
             currentRightTangent = rightPoint
             currentLeftTangent = leftPoint
 
 
+
 def getSlope(A, B):
     return (A.y() - B.y())/(A.x() - B.x())
+
 
 def orderClockwise(pointsList):
     if (getSlope(pointsList[0], pointsList[1]) > getSlope(pointsList[0], pointsList[2])):
@@ -95,42 +175,67 @@ def orderClockwise(pointsList):
 
 
 def merge(self, leftSide, rightSide):
-    print("In the Merge algorithm")
+    # print("In the Merge algorithm")
 
     if len(leftSide) < 4 or len(rightSide) < 4:
         if len(leftSide) == 3:
             leftSide = orderClockwise(leftSide)
-        elif len(rightSide) == 3:
+        if len(rightSide) == 3:
             rightSide = orderClockwise(rightSide)
 
 #Show left shape
-    polygonLeft = [QLineF(leftSide[i],leftSide[(i+1)%3]) for i in range(3)]
-    assert( type(polygonLeft) == list and type(polygonLeft[0]) == QLineF )
-    self.show_hull.emit(polygonLeft,(0,255,0))
-
-#show right shape
-    polygonRight = [QLineF(rightSide[i],rightSide[(i+1)%3]) for i in range(3)]
-    assert( type(polygonRight) == list and type(polygonRight[0]) == QLineF )
-    self.show_hull.emit(polygonRight,(255,0,0))
+#     polygonLeft = [QLineF(leftSide[i],leftSide[(i+1)%3]) for i in range(3)]
+#     assert( type(polygonLeft) == list and type(polygonLeft[0]) == QLineF )
+#     self.show_hull.emit(polygonLeft,(0,255,0))
+#
+# #show right shape
+#     polygonRight = [QLineF(rightSide[i],rightSide[(i+1)%3]) for i in range(3)]
+#     assert( type(polygonRight) == list and type(polygonRight[0]) == QLineF )
+#     self.show_hull.emit(polygonRight,(255,0,0))
 
     leftStart = getClosestRightPoint(leftSide)
     rightStart = getClosestLeftPoint(rightSide)
 
-    leftTopTangent, rightTopTangent = getUpperTangent(leftStart, rightStart, leftSide, rightSide)
-    print(leftTopTangent)
-    print(rightTopTangent)
-    upperTangent = [QLineF(leftSide[leftTopTangent], rightSide[rightTopTangent])]
-    assert( type(upperTangent) == list and type(upperTangent[0]) == QLineF )
-    self.show_hull.emit(upperTangent,(255,255,255))
-    leftBottomTangent, rightBottomTangent = getUpperTangent(rightStart, leftStart, rightSide, leftSide)
+    leftTopTangent, rightTopTangent = getUpperTangent(self, leftStart, rightStart, leftSide, rightSide)
+    # print(leftTopTangent)
+    # print(rightTopTangent)
+    # upperTangent = [QLineF(leftSide[leftTopTangent], rightSide[rightTopTangent])]
+    # assert( type(upperTangent) == list and type(upperTangent[0]) == QLineF )
+    # self.show_hull.emit(upperTangent,(255,255,255))
 
-    lowerTangent = [QLineF(leftSide[leftBottomTangent], rightSide[rightBottomTangent])]
-    assert( type(lowerTangent) == list and type(lowerTangent[0]) == QLineF )
-    self.show_hull.emit(lowerTangent,(255,255,255))
+    leftBottomTangent, rightBottomTangent = getLowerTangent(self, leftStart, rightStart, leftSide, rightSide)
+
+    # lowerTangent = [QLineF(leftSide[leftBottomTangent], rightSide[rightBottomTangent])]
+    # assert( type(lowerTangent) == list and type(lowerTangent[0]) == QLineF )
+    # self.show_hull.emit(lowerTangent,(255,255,255))
+
+    # print("leftTopTangent = ", leftTopTangent)
+    # print("rightTopTangent = ", rightTopTangent)
+    # print("leftBottomTangent = ", leftBottomTangent)
+    # print("rightBottomTangent = ", rightBottomTangent)
 
 
+    endList = []
+    i = leftBottomTangent
 
-    return
+    while i != leftTopTangent:
+        endList.append(leftSide[i])
+        i = (i + 1) % len(leftSide)
+
+    endList.append(leftSide[i])
+    i = rightTopTangent
+
+    while i != rightBottomTangent:
+        endList.append(rightSide[i])
+        i = (i + 1) % len(rightSide)
+    endList.append(rightSide[i])
+
+    # fullthing = [QLineF(endList[i],endList[(i+1)%len(endList)]) for i in range(len(endList))]
+    # assert( type(fullthing) == list and type(fullthing[0]) == QLineF )
+    # self.show_hull.emit(fullthing,(255,255,255))
+
+
+    return endList
 
 
 
@@ -182,8 +287,13 @@ class ConvexHullSolverThread(QThread):
         print('Time Elapsed (Sorting): {:3.3f} sec'.format(t2-t1))
 
         t3 = time.time()
-        divideAndConquer(self, self.points)
+        finalList = divideAndConquer(self, self.points)
         t4 = time.time()
+
+        polygon = [QLineF(finalList[i],finalList[(i+1)%len(finalList)]) for i in range(len(finalList))]
+        assert( type(polygon) == list and type(polygon[0]) == QLineF )
+        self.show_hull.emit(polygon,(255,255,255))
+
 
         USE_DUMMY = False
         if USE_DUMMY:
