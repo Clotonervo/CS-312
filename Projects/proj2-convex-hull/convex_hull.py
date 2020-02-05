@@ -186,6 +186,7 @@ def orderClockwise(pointList):
 
     for p in pointList:
         if p != leftMostX and p != rightMostX:
+            heightDiff = leftMostX.y() - rightMostX.y()
             if p.y() < leftMostX.y():
                 print("current Index = ", currentIndex)
                 newPointsList = [pointList[leftMostXIndex], pointList[rightMostXIndex], pointList[currentIndex]]
@@ -202,6 +203,8 @@ def orderClockwise(pointList):
 
 def merge(self, leftSide, rightSide):
     # print("In the Merge algorithm")
+    print("leftSide unsorted = ", leftSide)
+    print("rightSide unsorted = ", rightSide)
 
     if len(leftSide) < 4 or len(rightSide) < 4:
         if len(leftSide) == 3:
@@ -213,14 +216,14 @@ def merge(self, leftSide, rightSide):
     print("rightSide = ", rightSide)
 
 #Show left shape
-    # polygonLeft = [QLineF(leftSide[i],leftSide[(i+1)%len(leftSide)]) for i in range(len(leftSide))]
-    # assert( type(polygonLeft) == list and type(polygonLeft[0]) == QLineF )
-    # self.show_hull.emit(polygonLeft,(0,0,255))
+    polygonLeft = [QLineF(leftSide[i],leftSide[(i+1)%len(leftSide)]) for i in range(len(leftSide))]
+    assert( type(polygonLeft) == list and type(polygonLeft[0]) == QLineF )
+    self.show_hull.emit(polygonLeft,(0,0,255))
 
 # #show right shape
-    # polygonRight = [QLineF(rightSide[i],rightSide[(i+1)%len(rightSide)]) for i in range(len(rightSide))]
-    # assert( type(polygonRight) == list and type(polygonRight[0]) == QLineF )
-    # self.show_hull.emit(polygonRight,(0,255,0))
+    polygonRight = [QLineF(rightSide[i],rightSide[(i+1)%len(rightSide)]) for i in range(len(rightSide))]
+    assert( type(polygonRight) == list and type(polygonRight[0]) == QLineF )
+    self.show_hull.emit(polygonRight,(0,255,0))
 
     leftStart = getClosestRightPoint(leftSide)
     rightStart = getClosestLeftPoint(rightSide)
@@ -239,14 +242,14 @@ def merge(self, leftSide, rightSide):
     # self.show_hull.emit(lowerTangent,(255,0,0))
 
 
-    # side = [QLineF(leftSide[0], rightSide[0])]
-    # assert( type(side) == list and type(side[0]) == QLineF )
-    # self.show_hull.emit(side,(0,0,0))
-    #
-    # side = [QLineF(leftSide[1], rightSide[1])]
-    # assert( type(side) == list and type(side[0]) == QLineF )
-    # self.show_hull.emit(side,(0,0,0))
-    #
+    side = [QLineF(leftSide[0], rightSide[0])]
+    assert( type(side) == list and type(side[0]) == QLineF )
+    self.show_hull.emit(side,(0,0,0))
+
+    side = [QLineF(leftSide[1], rightSide[1])]
+    assert( type(side) == list and type(side[0]) == QLineF )
+    self.show_hull.emit(side,(0,0,0))
+
     # side = [QLineF(leftSide[2], rightSide[2])]
     # assert( type(lowerTangent) == list and type(side[0]) == QLineF )
     # self.show_hull.emit(side,(0,0,0))
