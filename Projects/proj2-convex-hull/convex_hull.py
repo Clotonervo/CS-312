@@ -1,16 +1,16 @@
-
+# Fails on 10 points on seed 0
 
 def divideAndConquer(self, sortedPoints):
-    # print("***********************")
-    # print("sortedPoints = ", len(sortedPoints))
+    print("***********************")
+    print("sortedPoints = ", len(sortedPoints))
     if len(sortedPoints) < 4:        # This will mean that when there are only 3 or less points will we start combining
         return sortedPoints
     else:
         leftSide = divideAndConquer(self, sortedPoints[:len(sortedPoints)//2])
         rightSide = divideAndConquer(self, sortedPoints[len(sortedPoints)//2:])
 
-        # print("leftSide = ", len(leftSide))
-        # print("rightSide = ", len(rightSide))
+        print("leftSide = ", len(leftSide))
+        print("rightSide = ", len(rightSide))
 
         return merge(self, leftSide, rightSide)
 
@@ -29,7 +29,7 @@ def getClosestRightPoint(points):
 def getClosestLeftPoint(points):
     index = 0;
     xPoint = points[0].x();
-    for i in range(len(points) - 1):
+    for i in range(len(points)):
         if (points[i].x() < xPoint):
             xPoint = points[i].x()
             index = i
@@ -165,12 +165,38 @@ def getSlope(A, B):
     return (A.y() - B.y())/(A.x() - B.x())
 
 
-def orderClockwise(pointsList):
-    if (getSlope(pointsList[0], pointsList[1]) > getSlope(pointsList[0], pointsList[2])):
-        return pointsList
-    else:
-        newPointsList = [pointsList[0], pointsList[2], pointsList[1]]
-        return newPointsList
+# def orderClockwise(pointsList):
+#     if (getSlope(pointsList[0], pointsList[1]) >= getSlope(pointsList[0], pointsList[2])):
+#         return pointsList
+#     else:
+#         newPointsList = [pointsList[0], pointsList[2], pointsList[1]]
+#         return newPointsList
+
+def orderClockwise(pointList):
+    leftMostXIndex = getClosestLeftPoint(pointList)
+    rightMostXIndex = getClosestRightPoint(pointList)
+    leftMostX = pointList[leftMostXIndex]
+    rightMostX = pointList[rightMostXIndex]
+
+    print("rightMostPoint = ", rightMostXIndex)
+    print("leftMostPoint = ", leftMostXIndex)
+
+
+    currentIndex = 0
+
+    for p in pointList:
+        if p != leftMostX and p != rightMostX:
+            if p.y() < leftMostX.y():
+                print("current Index = ", currentIndex)
+                newPointsList = [pointList[leftMostXIndex], pointList[rightMostXIndex], pointList[currentIndex]]
+                print("returning: ",leftMostXIndex, rightMostXIndex, currentIndex)
+                return newPointsList
+            else:
+                print("current Index = ", currentIndex)
+                newPointsList = [pointList[leftMostXIndex], pointList[currentIndex], pointList[rightMostXIndex]]
+                print("returning: ",leftMostXIndex, currentIndex, rightMostXIndex)
+                return pointList
+        currentIndex += 1
 
 
 
@@ -183,15 +209,18 @@ def merge(self, leftSide, rightSide):
         if len(rightSide) == 3:
             rightSide = orderClockwise(rightSide)
 
+    print("leftSide = ", leftSide)
+    print("rightSide = ", rightSide)
+
 #Show left shape
-#     polygonLeft = [QLineF(leftSide[i],leftSide[(i+1)%3]) for i in range(3)]
-#     assert( type(polygonLeft) == list and type(polygonLeft[0]) == QLineF )
-#     self.show_hull.emit(polygonLeft,(0,255,0))
-#
+    # polygonLeft = [QLineF(leftSide[i],leftSide[(i+1)%len(leftSide)]) for i in range(len(leftSide))]
+    # assert( type(polygonLeft) == list and type(polygonLeft[0]) == QLineF )
+    # self.show_hull.emit(polygonLeft,(0,0,255))
+
 # #show right shape
-#     polygonRight = [QLineF(rightSide[i],rightSide[(i+1)%3]) for i in range(3)]
-#     assert( type(polygonRight) == list and type(polygonRight[0]) == QLineF )
-#     self.show_hull.emit(polygonRight,(255,0,0))
+    # polygonRight = [QLineF(rightSide[i],rightSide[(i+1)%len(rightSide)]) for i in range(len(rightSide))]
+    # assert( type(polygonRight) == list and type(polygonRight[0]) == QLineF )
+    # self.show_hull.emit(polygonRight,(0,255,0))
 
     leftStart = getClosestRightPoint(leftSide)
     rightStart = getClosestLeftPoint(rightSide)
@@ -201,38 +230,90 @@ def merge(self, leftSide, rightSide):
     # print(rightTopTangent)
     # upperTangent = [QLineF(leftSide[leftTopTangent], rightSide[rightTopTangent])]
     # assert( type(upperTangent) == list and type(upperTangent[0]) == QLineF )
-    # self.show_hull.emit(upperTangent,(255,255,255))
+    # self.show_hull.emit(upperTangent,(255,0,0))
 
     leftBottomTangent, rightBottomTangent = getLowerTangent(self, leftStart, rightStart, leftSide, rightSide)
-
+    #
     # lowerTangent = [QLineF(leftSide[leftBottomTangent], rightSide[rightBottomTangent])]
     # assert( type(lowerTangent) == list and type(lowerTangent[0]) == QLineF )
-    # self.show_hull.emit(lowerTangent,(255,255,255))
+    # self.show_hull.emit(lowerTangent,(255,0,0))
 
-    # print("leftTopTangent = ", leftTopTangent)
-    # print("rightTopTangent = ", rightTopTangent)
-    # print("leftBottomTangent = ", leftBottomTangent)
-    # print("rightBottomTangent = ", rightBottomTangent)
+
+    # side = [QLineF(leftSide[0], rightSide[0])]
+    # assert( type(side) == list and type(side[0]) == QLineF )
+    # self.show_hull.emit(side,(0,0,0))
+    #
+    # side = [QLineF(leftSide[1], rightSide[1])]
+    # assert( type(side) == list and type(side[0]) == QLineF )
+    # self.show_hull.emit(side,(0,0,0))
+    #
+    # side = [QLineF(leftSide[2], rightSide[2])]
+    # assert( type(lowerTangent) == list and type(side[0]) == QLineF )
+    # self.show_hull.emit(side,(0,0,0))
+
+    print("leftTopTangent = ", leftTopTangent, " ", leftSide[leftTopTangent])
+    print("rightTopTangent = ", rightTopTangent, " ", rightSide[rightTopTangent])
+    print("leftBottomTangent = ", leftBottomTangent, " ", leftSide[leftBottomTangent])
+    print("rightBottomTangent = ", rightBottomTangent, " ", rightSide[rightBottomTangent])
 
 
     endList = []
-    i = leftBottomTangent
-
-    while i != leftTopTangent:
-        endList.append(leftSide[i])
-        i = (i + 1) % len(leftSide)
-
-    endList.append(leftSide[i])
+    # endList.append(rightSide[rightTopTangent])
     i = rightTopTangent
 
-    while i != rightBottomTangent:
-        endList.append(rightSide[i])
-        i = (i + 1) % len(rightSide)
-    endList.append(rightSide[i])
+    if rightTopTangent != rightBottomTangent:
+         while i != rightBottomTangent:
+            endList.append(rightSide[i])
+            i = (i + 1) % len(rightSide)
+         endList.append(rightSide[rightBottomTangent])
+    else:
+         endList.append(rightSide[rightTopTangent])
 
-    # fullthing = [QLineF(endList[i],endList[(i+1)%len(endList)]) for i in range(len(endList))]
-    # assert( type(fullthing) == list and type(fullthing[0]) == QLineF )
-    # self.show_hull.emit(fullthing,(255,255,255))
+
+
+    if leftTopTangent != leftBottomTangent:
+        i = leftBottomTangent
+        while i != leftTopTangent:
+            endList.append(leftSide[i])
+            i = (i + 1) % len(leftSide)
+        endList.append(leftSide[leftTopTangent])
+    else:
+        endList.append(leftSide[leftBottomTangent])
+
+    # if leftTopTangent != leftBottomTangent:
+    #     while i != leftTopTangent:
+    #         endList.append(leftSide[i])
+    #         i = (i + 1) % len(leftSide)
+    #     endList.append(leftSide[leftTopTangent])
+    # else:
+    #     endList.append(leftSide[leftBottomTangent])
+    #
+    # i = rightTopTangent
+    #
+    # if rightTopTangent != rightBottomTangent:
+    #      while i != rightBottomTangent:
+    #         endList.append(rightSide[i])
+    #         i = (i + 1) % len(rightSide)
+    #      endList.append(rightSide[rightBottomTangent])
+    # else:
+    #      endList.append(rightSide[rightTopTangent])
+
+
+
+    # while i != leftTopTangent:
+    #     endList.append(rightSide[i])
+    #     i = (i + 1) % len(rightSide)
+
+    # endList.append(rightSide[rightBottomTangent])
+    # # endList.append(leftSide[leftBottomTangent])
+    # i = leftBottomTangent
+    #
+    # while i != leftTopTangent:
+    #     endList.append(leftSide[i])
+    #     i = (i + 1) % len(leftSide)
+    # endList.append(leftSide[leftTopTangent])
+
+    print("endList = ", endList)
 
 
     return endList
