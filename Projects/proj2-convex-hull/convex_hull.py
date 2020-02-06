@@ -1,33 +1,48 @@
-def divideAndConquer(self, sortedPoints):
+#   divideAndConquer()
+#   Time: O(nlog(n)), because a = 2, b = 2, and d = 1, which leaves us with O(nlog(n)) according to the master's theorm
+#   Space: O(nlog(n)), gets called log(n) times in recursion, each time storing n/2, so ends up being a total of O(nlog(n))
+def divideAndConquer(sortedPoints):
     if len(sortedPoints) < 3:        # This will mean that when there are only 2 or less points will we start combining
         return sortedPoints
     else:
-        leftSide = divideAndConquer(self, sortedPoints[:len(sortedPoints)//2])
-        rightSide = divideAndConquer(self, sortedPoints[len(sortedPoints)//2:])
-        return merge(self, leftSide, rightSide)
+        leftSide = divideAndConquer(sortedPoints[:len(sortedPoints)//2])
+        rightSide = divideAndConquer(sortedPoints[len(sortedPoints)//2:])
+        return merge(leftSide, rightSide)
 
+#   getSlope()
+#   Time: O(1)
+#   Space: O(1)
+def getSlope(A, B):
+    return (A.y() - B.y())/(A.x() - B.x())  #returns the slope between A and B
 
+#   getClosestRightPoint()
+#   Time: O(n), loops through each element in points
+#   Space: O(1), No recursion, stored variables are small in comparison
 def getClosestRightPoint(points):
-        index = 0;
-        xPoint = points[0].x();
-        for i in range(len(points)):
-            if (points[i].x() > xPoint):
-                xPoint = points[i].x()
-                index = i
-        return index
+    index = 0;
+    xPoint = points[0].x();
+    for i in range(len(points)):        #Loops through each element to find leftMostX
+        if (points[i].x() > xPoint):
+            xPoint = points[i].x()
+            index = i
+    return index
 
-
+#   getClosestLeftPoint()
+#   Time: O(n), loops through each element in points
+#   Space: O(1), No recursion, stored variables are small in comparison
 def getClosestLeftPoint(points):
     index = 0;
     xPoint = points[0].x();
-    for i in range(len(points)):
+    for i in range(len(points)):         #Loops through each element to find leftMostX
         if (points[i].x() < xPoint):
             xPoint = points[i].x()
             index = i
     return index
 
-
-def getUpperTangent(self, leftStart, rightStart, leftList, rightList):
+#   getUpperTangent()
+#   Time:
+#   Space:
+def getUpperTangent(leftStart, rightStart, leftList, rightList):
     currentSlope = getSlope(leftList[leftStart], rightList[rightStart])
     rightLength = len(rightList)
     leftLength = len(leftList)
@@ -68,8 +83,10 @@ def getUpperTangent(self, leftStart, rightStart, leftList, rightList):
             currentRightTangent = rightPoint
             currentLeftTangent = leftPoint
 
-
-def getLowerTangent(self, leftStart, rightStart, leftList, rightList):
+#   getLowerTangent()
+#   Time:
+#   Space:
+def getLowerTangent(leftStart, rightStart, leftList, rightList):
     currentSlope = getSlope(leftList[leftStart], rightList[rightStart])
     rightLength = len(rightList)
     leftLength = len(leftList)
@@ -113,13 +130,15 @@ def getLowerTangent(self, leftStart, rightStart, leftList, rightList):
             currentLeftTangent = leftPoint
 
 
-
-def merge(self, leftSide, rightSide):
+#   merge()
+#   Time:
+#   Space:
+def merge(leftSide, rightSide):
     leftStart = getClosestRightPoint(leftSide)
     rightStart = getClosestLeftPoint(rightSide)
 
-    leftTopTangent, rightTopTangent = getUpperTangent(self, leftStart, rightStart, leftSide, rightSide)
-    leftBottomTangent, rightBottomTangent = getLowerTangent(self, leftStart, rightStart, leftSide, rightSide)
+    leftTopTangent, rightTopTangent = getUpperTangent(leftStart, rightStart, leftSide, rightSide)
+    leftBottomTangent, rightBottomTangent = getLowerTangent(leftStart, rightStart, leftSide, rightSide)
 
     endList = []
     i = rightTopTangent
@@ -184,12 +203,12 @@ class ConvexHullSolverThread(QThread):
         print( 'Computing Hull for set of {} points'.format(n) )
 
         t1 = time.time()
-        self.points = sorted(self.points , key=lambda k: k.x())  # Python sorted function, O(nlogn) time, O(n) space
+        self.points = sorted(self.points , key=lambda k: k.x())  # Python sort function, O(nlogn) time, O(n) space
         t2 = time.time()
         print('Time Elapsed (Sorting): {:3.3f} sec'.format(t2-t1))
 
         t3 = time.time()
-        finalList = divideAndConquer(self, self.points)
+        finalList = divideAndConquer(self.points) # This is O(nlogn) time, O(n) space at worst case
         t4 = time.time()
 
         polygon = [QLineF(finalList[i],finalList[(i+1)%len(finalList)]) for i in range(len(finalList))]
