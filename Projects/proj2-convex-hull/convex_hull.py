@@ -40,8 +40,8 @@ def getClosestLeftPoint(points):
     return index
 
 #   getUpperTangent()
-#   Time:
-#   Space:
+#   Time: O(n), worst case scenario we loop through each node in the two lists
+#   Space: O(1), it is constant because it simply returns two values
 def getUpperTangent(leftStart, rightStart, leftList, rightList):
     currentSlope = getSlope(leftList[leftStart], rightList[rightStart])
     rightLength = len(rightList)
@@ -84,8 +84,8 @@ def getUpperTangent(leftStart, rightStart, leftList, rightList):
             currentLeftTangent = leftPoint
 
 #   getLowerTangent()
-#   Time:
-#   Space:
+#   Time: O(n), worst case scenario we loop through each node in the two lists
+#   Space: O(1), it is constant because it simply returns two values
 def getLowerTangent(leftStart, rightStart, leftList, rightList):
     currentSlope = getSlope(leftList[leftStart], rightList[rightStart])
     rightLength = len(rightList)
@@ -131,8 +131,8 @@ def getLowerTangent(leftStart, rightStart, leftList, rightList):
 
 
 #   merge()
-#   Time:
-#   Space:
+#   Time: O(n), many of the function calls and other parts of this function are all O(n) time
+#   Space: O(n), the end of this function creates a new array of at most n elements
 def merge(leftSide, rightSide):
     leftStart = getClosestRightPoint(leftSide)
     rightStart = getClosestLeftPoint(rightSide)
