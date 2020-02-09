@@ -40,7 +40,7 @@ def getClosestLeftPoint(points):
     return index
 
 #   getUpperTangent()
-#   Time:
+#   Time: 
 #   Space:
 def getUpperTangent(leftStart, rightStart, leftList, rightList):
     currentSlope = getSlope(leftList[leftStart], rightList[rightStart])
