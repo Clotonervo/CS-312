@@ -40,13 +40,8 @@ def getClosestLeftPoint(points):
     return index
 
 #   getUpperTangent()
-<<<<<<< HEAD
-#   Time: 
-#   Space:
-=======
 #   Time: O(n), worst case scenario we loop through each node in the two lists
 #   Space: O(1), it is constant because it simply returns two values
->>>>>>> fb9bd2c51086c35d932c5a61407b7ab01f9816d0
 def getUpperTangent(leftStart, rightStart, leftList, rightList):
     currentSlope = getSlope(leftList[leftStart], rightList[rightStart])
     rightLength = len(rightList)
