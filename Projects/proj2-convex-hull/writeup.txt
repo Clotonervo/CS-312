@@ -1,0 +1,18 @@
+Time and Space complexity:
+
+	The whole program runs in O(nlog(n)) time, with space complexity of O(nlog(n)).
+
+	Sorting the inital list runs in O(nlog(n)) time and O(n) space using the default python sorter.
+
+	The only space complexity worth noting is that in the divideAndConquer() method, as other than this function the space complexity is O(1). As mentioned in the code comments, this function will recurse to log(n) levels, with each level simply alocating half of the previous array, with a total space of n for each level. This leaves us with a total space complexity of O(nlog(n)), which is the cap of the program.
+
+	The merge() function runs in O(n) time, with a space complexity of O(1). This function runs in O(n) because although it traverses through each array maybe multiple times, each O(n) function is a different step, so they are never compounded. 
+
+	Finding both upper and lower tangents end with a time complexity of O(n) as at worst case they traverse through each point in either list. Actually merging the two lists together also is only O(n) because at worst case it iterates through each point of both lists, but because both sections are O(n) and do not contain inner loops, our time complextiy stays put with a list of O(n) time steps, simplifying to a total time complexity of O(n).
+
+	Other minor functions (such as getting the right most point) have a time complexity of O(n) because they iterate through each point. This time does not add to the time complexity because, as previously explained, it is simply one of the O(n) steps needed during merging, and is not compounded with previous steps. 
+
+Theoretical Analysis:
+
+	Knowing that merge() completes in O(n) time, we can now use the master theorm to calculate the total big-O time. Because each time we call divideAndConquer(), we split the problem into two sets both of n/2. This gives us variables a = 2, b = 2, and d = 1 (from merge() function complexity), which equals T(n) = 2T(n/2) + n. Because the result of a/b^d is < 1, according to the master theorm, we can conclude that the total time complexity of the convex_hull program is O(nlog(n)).
+

@@ -1,6 +1,7 @@
+
 #   divideAndConquer()
 #   Time: O(nlog(n)), because a = 2, b = 2, and d = 1, which leaves us with O(nlog(n)) according to the master's theorm
-#   Space: O(nlog(n)), gets called log(n) times in recursion, each time storing n/2, so ends up being a total of O(nlog(n))
+#   Space: O(nlog(n)), gets called log(n) times in recursion, each time storing a list with size n, so ends up being a total of O(nlog(n))
 def divideAndConquer(sortedPoints):
     if len(sortedPoints) < 3:        # This will mean that when there are only 2 or less points will we start combining
         return sortedPoints
@@ -53,24 +54,24 @@ def getUpperTangent(leftStart, rightStart, leftList, rightList):
     leftPoint = leftStart
     rightPoint = rightStart
 
-    while True:
-        slopeIncreasing = True
+    while True:                         # This only loops when a change is found, still O(n) time;
+        slopeIncreasing = True          # Two steps both with O(n), which comes to O(n) total time
         slopeDecreasing = True
 
-        while slopeIncreasing:
+        while slopeIncreasing:                      # Starts at closest points, follows left point up first
             nextPointSlope = getSlope(leftList[leftPoint], rightList[(rightPoint + 1) % rightLength])
 
-            if nextPointSlope > currentSlope:
+            if nextPointSlope > currentSlope:        # At worst case loops through each point, but is still O(n)
                 currentSlope = nextPointSlope
                 rightPoint = (rightPoint + 1) % rightLength
                 slopeIncreasing = True
             else:
                 slopeIncreasing = False
 
-        while slopeDecreasing:
+        while slopeDecreasing:              # Now starts at left point and rotates it up until at the top
             nextPointSlope = getSlope(leftList[(leftPoint - 1) % leftLength], rightList[rightPoint])
 
-            if nextPointSlope < currentSlope:
+            if nextPointSlope < currentSlope:        # At worst case loops through each point, but is still O(n)
                 currentSlope = nextPointSlope;
                 leftPoint = (leftPoint - 1) % leftLength
                 slopeDecreasing = True
@@ -97,14 +98,14 @@ def getLowerTangent(leftStart, rightStart, leftList, rightList):
     leftPoint = leftStart
     rightPoint = rightStart
 
-    while True:
-        slopeIncreasing = True
+    while True:                             # This only loops when a change is found, still O(n) time;
+        slopeIncreasing = True              # Two steps both with O(n), which comes to O(n) total time
         slopeDecreasing = True
 
-        while slopeDecreasing:
+        while slopeDecreasing:          # Starts at closest points, follows right point down first
             nextPointSlope = getSlope(leftList[leftPoint], rightList[(rightPoint - 1) % rightLength])
 
-            if nextPointSlope < currentSlope:
+            if nextPointSlope < currentSlope:             # At worst case loops through each point, but is still O(n)
                 currentSlope = nextPointSlope
                 rightPoint = (rightPoint - 1) % rightLength
                 slopeDecreasing = True
@@ -112,10 +113,10 @@ def getLowerTangent(leftStart, rightStart, leftList, rightList):
             else:
                 slopeDecreasing = False
 
-        while slopeIncreasing:
+        while slopeIncreasing:          # Takes left point and shifts it down clockwise until flatest.
             nextPointSlope = getSlope(leftList[(leftPoint + 1) % leftLength], rightList[rightPoint])
 
-            if nextPointSlope > currentSlope:
+            if nextPointSlope > currentSlope:            # At worst case loops through each point, but is still O(n)
                 currentSlope = nextPointSlope;
                 leftPoint = (leftPoint + 1) % leftLength
                 slopeIncreasing = True
@@ -140,10 +141,11 @@ def merge(leftSide, rightSide):
     leftTopTangent, rightTopTangent = getUpperTangent(leftStart, rightStart, leftSide, rightSide)
     leftBottomTangent, rightBottomTangent = getLowerTangent(leftStart, rightStart, leftSide, rightSide)
 
-    endList = []
+    endList = []                         # Because there are a few different steps of O(n), the total complexity is still O(n) at worst case
     i = rightTopTangent
 
-    if rightTopTangent != rightBottomTangent:
+    # Starts at top right tangent, and loops around shape clockwise, checking to see if tangents on either side are the same
+    if rightTopTangent != rightBottomTangent:           # Worst case loops through each point, O(n)
          while i != rightBottomTangent:
             endList.append(rightSide[i])
             i = (i + 1) % len(rightSide)
@@ -151,7 +153,7 @@ def merge(leftSide, rightSide):
     else:
          endList.append(rightSide[rightTopTangent])
 
-    if leftTopTangent != leftBottomTangent:
+    if leftTopTangent != leftBottomTangent:             # Worst case loops through each point, O(n)
         i = leftBottomTangent
         while i != leftTopTangent:
             endList.append(leftSide[i])
@@ -208,7 +210,7 @@ class ConvexHullSolverThread(QThread):
         print('Time Elapsed (Sorting): {:3.3f} sec'.format(t2-t1))
 
         t3 = time.time()
-        finalList = divideAndConquer(self.points) # This is O(nlogn) time, O(n) space at worst case
+        finalList = divideAndConquer(self.points) # This is O(nlogn) time, O(nlog(n)) space at worst case
         t4 = time.time()
 
         polygon = [QLineF(finalList[i],finalList[(i+1)%len(finalList)]) for i in range(len(finalList))]
