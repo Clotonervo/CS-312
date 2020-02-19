@@ -1,0 +1,48 @@
+• Analyzing algorithms
+	o correctness, complexity, can we do better?
+• Asymptotic Analysis
+	o BigO, BigΘ, and BigΩ
+• Basic arithmetic algorithms and complexity
+	o Addition, multiplication, modular arithmetic, modular exponentiation, modular inverse/division, Euclid’s GCD
+• Primality testing
+	o Fermat’s little theorem, probabilistic nature
+• Divide and Conquer
+	o Paradigm/How is speed up attained, 
+	- mergesort O(nlogn)
+	- quicksort O(logn) 
+	- multiply = divide and conquer, 
+	- matrix multiply, 
+	- convex hull O(nlogn)
+	- selection (median)
+• Master Theorem
+	o How to use it, what does it tell us, geometric series intuition
+• Graph connectedness
+	o Graph representation, Depth First Search, search tree and pre/post order values, cycle-detection, DAGs, linearization, finding strongly connected components
+• Graph paths
+	o Breadth First Search, Dijkstra’s algorithm, priority queue implementations/complexity, negative edges, Bellman-Ford, shortest DAG paths
+• Greedy algorithms
+	o Paradigm/philosophy, Minimum Spanning Tree with Kruskal’s/Prim’s
+
+
+Other notes:
+	- Figure out how to encode a string in RSA, Look at that a lot more
+	- Know complexity of a majority of algorithms: 
+		- Dijkstras: O(2V) but with min-priority queue it can be O(V + ElogV)
+		- Primms: O((V+E)logV)
+RSA:
+	j = private key
+	(n, k) = public key
+	calculate n = p * q
+	calculate z = ( p - 1 ) * ( q - 1 )
+ 	choose a prime number k, such that k is co-prime to z, i.e, z is not divisible by k
+ 	k * j = 1 ( mod z ) is how you get private key
+
+ Encryption:
+ 	P^k = E (mod n), where P is the message, n,k are public keys, and E is the encrypted message
+
+ Decryption:
+ 	E^j = P (mod n), where P is the message, n,k are public keys, E is encrypted message, and j is private key
+
+ 	https://www.cs.drexel.edu/~jpopyack/IntroCS/HW/RSAWorksheet.html
+ 	http://sergematovic.tripod.com/rsa1.html
+
