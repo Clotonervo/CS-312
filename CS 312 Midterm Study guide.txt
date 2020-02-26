@@ -6,6 +6,26 @@
 	o Addition, multiplication, modular arithmetic, modular exponentiation, modular inverse/division, Euclid’s GCD
 • Primality testing
 	o Fermat’s little theorem, probabilistic nature
+	- Probability: each run is 1/2 probabibiliy of being incorrect, total 1-1/2^k for probability of being correct
+
+def run_fermat(N,k):        # Runs in O(n^3) time, but O(n) space
+    for number in range(k):
+        a = random.randint(2, N-1) 
+        if mod_exp(a, N-1, N) == 1: 
+            continue
+        else:   
+            return 'composite'
+    return 'prime'
+
+def mod_exp(x, y, N):   # Runs in O(n^3), assuming we have n bits for input, O(n) space
+    if y == 0:      
+        return 1
+    z = mod_exp(x, y//2, N)
+    if y % 2 == 0:     
+        return (z**2) % N   
+    else:
+        return x * (z**2) % N  
+
 • Divide and Conquer
 	o Paradigm/How is speed up attained, 
 	- mergesort O(nlogn)
@@ -38,10 +58,10 @@ RSA:
  	k * j = 1 ( mod z ) is how you get private key
 
  Encryption:
- 	P^k = E (mod n), where P is the message, n,k are public keys, and E is the encrypted message
+ 	P^k = E (mod N), where P is the message, N,k are public keys, and E is the encrypted message
 
  Decryption:
- 	E^j = P (mod n), where P is the message, n,k are public keys, E is encrypted message, and j is private key
+ 	E^j = P (mod N), where P is the message, N,k are public keys, E is encrypted message, and j is private key
 
  	https://www.cs.drexel.edu/~jpopyack/IntroCS/HW/RSAWorksheet.html
  	http://sergematovic.tripod.com/rsa1.html
