@@ -16,44 +16,31 @@ class NetworkRoutingSolver:
     def getShortestPath( self, destIndex ):
         self.dest = destIndex
 
-        # TODO: RETURN THE SHORTEST PATH FOR destIndex
-        #       INSTEAD OF THE DUMMY SET OF EDGES BELOW
-        #       IT'S JUST AN EXAMPLE OF THE FORMAT YOU'LL
-        #       NEED TO USE
-
-            # path_edges.append( (edge.src.loc, edge.dest.loc, '{:.0f}'.format(edge.length)) )
         path = [];
         previousNodeList = self.prev
         costList = self.cost
         currentNode = destIndex
 
-        print("previousNodeList = ", previousNodeList)
-        print("costList = ", costList);
-
-        while currentNode != self.source:
+        while currentNode != self.start:
             if previousNodeList[currentNode] == "x":
-                return {'cost': float("inf"), 'path': []}
+                return {'cost': 9999999999, 'path': []}
 
             edgeLength = 0
-            print("currentNode: ", currentNode)
-            print("Neighbors: ", self.network.nodes[currentNode].neighbors)
-            print("PreviousNode: ", previousNodeList[currentNode])
-            for edge in self.network.nodes[currentNode].neighbors:
-                if edge.dest.node_id == previousNodeList[currentNode]:
-                    print("Edge found! Length: ", edge.length)
+            for edge in self.network.nodes[previousNodeList[currentNode]].neighbors:
+                if edge.dest.node_id == currentNode:
+                    # print("Edge found! Length: ", edge.length)
                     edgeLength = edge.length
                     if edge.length == "x":
-                        return {'cost': float("inf"), 'path': []}
+                        return {'cost': 99999999999, 'path': []}
             path.append((self.network.nodes[currentNode].loc, self.network.nodes[previousNodeList[currentNode]].loc, '{:.0f}'.format(edgeLength)))
             currentNode = previousNodeList[currentNode]
-        print(costList[destIndex])
         return {'cost': costList[destIndex], 'path': path}
 
 
 
 
     def computeShortestPaths( self, srcIndex, use_heap=False ):
-        self.source = srcIndex
+        self.start = srcIndex
         t1 = time.time()
 
         # TODO: RUN DIJKSTRA'S TO DETERMINE SHORTEST PATHS.
@@ -67,8 +54,6 @@ class NetworkRoutingSolver:
             previousNodeList[node.node_id] = "x"
         distanceToNode[srcIndex] = 0;
 
-        print(distanceToNode)
-
         # if use_heap:
         #     print("want to use the heap!")
         # else:
@@ -76,17 +61,11 @@ class NetworkRoutingSolver:
 
         while queue.getLength() > 0:
             currentNode = queue.deleteMin()
-            print("currentNode", currentNode)
             for edge in self.network.nodes[currentNode].neighbors:
-                print(edge)
-                print(distanceToNode[edge.dest.node_id])
                 if edge.length + distanceToNode[currentNode] < distanceToNode[edge.dest.node_id]:
-                    print("edge found smaller = ", edge)
                     distanceToNode[edge.dest.node_id] = edge.length + distanceToNode[currentNode]
                     previousNodeList[edge.dest.node_id] = currentNode
                     queue.decreaseKey(edge.dest.node_id, distanceToNode[edge.dest.node_id])
-            print("previousNode List =====", previousNodeList)
-
         self.cost = distanceToNode
         self.prev = previousNodeList
 
@@ -123,6 +102,7 @@ class UnSortedArray:
 
         for distance in self.array:
             if distance != "x" and min > self.array[index]:
+                min = self.array[index]
                 min_index = index
             index += 1
 
