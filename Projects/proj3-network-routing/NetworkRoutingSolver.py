@@ -109,3 +109,22 @@ class UnSortedArray:
         self.array[min_index] = "x"
         self.length -= 1
         return min_index
+
+
+
+class MinHeap:
+    def __init__(self, startingNode, allNodes):
+        self.size = 0
+        return
+
+    def getLength(self):
+        return self.size
+
+    def insert(self, node):
+        return
+
+    def decreaseKey(self, index, value):
+        return
+
+    def deleteMin(self):
+        return
