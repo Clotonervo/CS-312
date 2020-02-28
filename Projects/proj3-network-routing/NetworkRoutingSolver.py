@@ -63,7 +63,6 @@ class NetworkRoutingSolver:
         print("Queue distances: ", queue.distances)
         print("Queue Map: ", queue.heapMap)
         print("Starting Node: ", srcIndex)
-        print("starting distance", queue.distances[queue.heapMap[srcIndex]])
 
         while queue.getLength() > 0:
             currentNode = queue.deleteMin()
@@ -146,12 +145,8 @@ class MinHeap:
                 #swap them
                 # print(self.heap)
                 tempMinDistance = self.distances[self.parentIndex(index)]
-
-
-
-                temp = self.distances[index]
-                self.distances[index] = self.distances[self.parentIndex(index)]
-                self.distances[self.parentIndex(index)] = temp
+                self.distances[self.parentIndex(index)] = self.distances[index]
+                self.distances[index] = tempMinDistance
 
                 parentNode = self.heap[self.parentIndex(index)]
                 self.heap[self.parentIndex(index)] = self.heap[index]
