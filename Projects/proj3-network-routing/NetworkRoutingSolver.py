@@ -174,9 +174,12 @@ class MinHeap:
         return
 
     def decreaseKey(self, index, value):
+        # Change the value and then rearrange it on the heap
         return
 
     def deleteMin(self):
+        self.size -= 1
+        # See if here we trickle down once we change the minimum
         return
 
     def parentIndex(self, index):
