@@ -16,7 +16,7 @@ class NetworkRoutingSolver:
     def getShortestPath( self, destIndex ):
         self.dest = destIndex
 
-        path = [];
+        path = []
         previousNodeList = self.prev
         costList = self.cost
         currentNode = destIndex
@@ -28,7 +28,6 @@ class NetworkRoutingSolver:
             edgeLength = 0
             for edge in self.network.nodes[previousNodeList[currentNode]].neighbors:
                 if edge.dest.node_id == currentNode:
-                    # print("Edge found! Length: ", edge.length)
                     edgeLength = edge.length
                     if edge.length == "x":
                         return {'cost': 99999999999, 'path': []}
@@ -43,29 +42,22 @@ class NetworkRoutingSolver:
         self.start = srcIndex
         t1 = time.time()
 
-        # TODO: RUN DIJKSTRA'S TO DETERMINE SHORTEST PATHS.
-        #       ALSO, STORE THE RESULTS FOR THE SUBSEQUENT
-        #       CALL TO getShortestPath(dest_index)
         distanceToNode = {}
         previousNodeList = {}
 
         for node in self.network.nodes:
             distanceToNode[node.node_id] = float("inf")
             previousNodeList[node.node_id] = "x"
-        distanceToNode[srcIndex] = 0;
+        distanceToNode[srcIndex] = 0
 
         if use_heap:
             queue = MinHeap(srcIndex, self.network.nodes)
         else:
             queue = UnSortedArray(srcIndex, self.network.nodes)
 
-        print("Queue heap: ", queue.heap)
-        print("Queue distances: ", queue.distances)
-        print("Queue Map: ", queue.heapMap)
-        print("Starting Node: ", srcIndex)
-
         while queue.getLength() > 0:
             currentNode = queue.deleteMin()
+
             for edge in self.network.nodes[currentNode].neighbors:
                 if edge.length + distanceToNode[currentNode] < distanceToNode[edge.dest.node_id]:
                     distanceToNode[edge.dest.node_id] = edge.length + distanceToNode[currentNode]
@@ -115,8 +107,6 @@ class UnSortedArray:
         self.length -= 1
         return min_index
 
-
-
 class MinHeap:
     def __init__(self, startingNode, allNodes):
         self.size = 0
@@ -136,35 +126,28 @@ class MinHeap:
         return self.size
 
     def bubbleUp(self, index):
-        print("-------------------")
-        while index != 0:
-            print("index = ", index)
-            print("child number: ", self.distances[index])
-            print("parent number: ", self.distances[self.parentIndex(index)])
-            if self.distances[index] < self.distances[self.parentIndex(index)]:
-                #swap them
-                # print(self.heap)
-                tempMinDistance = self.distances[self.parentIndex(index)]
-                self.distances[self.parentIndex(index)] = self.distances[index]
-                self.distances[index] = tempMinDistance
+        parentGreater = True
+        while index != 0 and parentGreater:
+            childNode = self.heap[index]
+            parentIndex = self.parentIndex(index)
+            parentNode = self.heap[parentIndex]
+            childDistance = self.distances[self.heap[index]]
+            parentDistance = self.distances[self.heap[self.parentIndex(index)]]
+            if childDistance < parentDistance:
 
-                parentNode = self.heap[self.parentIndex(index)]
-                self.heap[self.parentIndex(index)] = self.heap[index]
                 self.heap[index] = parentNode
+                self.heap[parentIndex] = childNode
 
-                newParentLocation = self.parentIndex(index)
-                self.heapMap[self.heap[index]] = index
-                self.heapMap[self.heap[self.parentIndex(index)]] = self.parentIndex(index)
-                print(self.heap)
-                print(self.heapMap)
-                print(self.distances)
-            index = index//2
+                self.heapMap[childNode] = parentIndex
+                self.heapMap[parentNode] = index
+            else:
+                parentGreater = False
+
+            index = self.parentIndex(index)
 
         return
 
     def insert(self, node, startingValue):
-        print("adding: ", node)
-        print("-- - - - - - - - - --")
         self.heap.append(node.node_id)
         self.distances.append(startingValue)
         self.heapMap.append(node.node_id)
@@ -175,12 +158,52 @@ class MinHeap:
 
     def decreaseKey(self, index, value):
         # Change the value and then rearrange it on the heap
+        self.distances[index] = value
+        self.bubbleUp(self.heapMap[index])
         return
 
     def deleteMin(self):
-        self.size -= 1
+
+        nodeToReturn = self.heap[0]
+        self.heap[0] = self.heap[-1]
+        self.heap[-1] = nodeToReturn
+
+        self.heapMap[self.heap[0]] = 0
+        self.heapMap[nodeToReturn] = "x"
+
+        del self.heap[-1]
+
+        currentIndex = 0
+        while currentIndex*2 + 2 < self.size -1:
+            minChildIndex = self.childMin(currentIndex)
+
+            if self.distances[self.heap[minChildIndex]] < self.distances[self.heap[currentIndex]]:
+                childNode = self.heap[minChildIndex]
+                parentNode = self.heap[currentIndex]
+                self.heap[currentIndex] = childNode
+                self.heap[minChildIndex] = parentNode
+
+                childNodeMap = self.heapMap[childNode]
+                parentNodeMap = self.heapMap[parentNode]
+                self.heapMap[childNode] = parentNodeMap
+                self.heapMap[parentNode] = childNodeMap
+
+            currentIndex = minChildIndex
+
+
         # See if here we trickle down once we change the minimum
-        return
+        self.size -= 1
+        return nodeToReturn
 
     def parentIndex(self, index):
         return (index - 1)//2
+
+    def childMin(self, parentIndex):
+        rightChildIndex = parentIndex*2 + 2
+        leftChildIndex = parentIndex*2 + 1
+
+        if self.distances[self.heap[rightChildIndex]] > self.distances[self.heap[leftChildIndex]]:
+            min = leftChildIndex
+        else:
+            min = rightChildIndex
+        return min
