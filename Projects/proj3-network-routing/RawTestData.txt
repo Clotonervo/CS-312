@@ -1,0 +1,46 @@
+Raw Data:
+
+n: 100
+
+Times:
+
+
+
+Average:
+
+
+n: 1000
+
+Times:
+
+
+
+Average:
+
+
+n: 10000
+
+Times:
+
+
+
+Average:
+
+
+n: 100000
+
+Times:
+
+
+
+Average:
+
+
+n: 1000000
+
+Times:
+
+
+
+Average:
+

@@ -149,10 +149,11 @@ class MinHeap:
         self.distances = []
 
         for x in allNodes:
-            if x == startingNode:
+            if x.node_id == startingNode:
                 self.insert(x, 0)
             else:
                 self.insert(x, float("inf"))
+        return
 
 # Time: O(logV), simple inserts into the heap and map arrays, then the bubbleUp() gives us the logV
 # Space: O(1), just inserting values into an array is constant
@@ -164,6 +165,8 @@ class MinHeap:
         self.size += 1
         self.bubbleUp(self.size - 1)
         return
+
+
 
 # Time: O(1)
 # Space: O(1)
