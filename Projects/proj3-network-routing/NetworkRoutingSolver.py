@@ -152,7 +152,6 @@ class MinHeap:
             self.insert(x)
         self.distances[startingNode] = 0
         self.bubbleUp(self.heap[startingNode])
-
         return
 
 # Time: O(1), simple inserts into the heap and map arrays
@@ -164,8 +163,6 @@ class MinHeap:
         self.heapMap[node.node_id] = self.size
         self.size += 1
         return
-
-
 
 # Time: O(1)
 # Space: O(1)
