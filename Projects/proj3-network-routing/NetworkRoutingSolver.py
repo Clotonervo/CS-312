@@ -133,14 +133,14 @@ class UnSortedArray:
 
 class MinHeap:
 
-# Time: O(VlogV), due to makeQueue
+# Time: O(V), due to makeQueue
 # Space: O(V), due to makeQueue
     def __init__(self, startingNode, allNodes):
         self.makeQueue(startingNode, allNodes)
         return
 
-# Time: O(VlogV), We loop through every node V, each time we insert we also bubble up so that the starting node is the root, which takes logV
-#       for a total O(V * logV) which goes to O(VlogV)
+# Time: O(V), We loop through every node V and insert it into heap, then we alter distance at startingNode and bubble
+#       that up to the root which takes O(logV) time, and we do this once, for a total O(V + logV) which goes to O(V)
 # Space: O(V), we keep 3 arrays of size V from this function: O(3V) => O(V)
     def makeQueue(self, startingNode, allNodes):
         self.size = 0
@@ -149,21 +149,20 @@ class MinHeap:
         self.distances = []
 
         for x in allNodes:
-            if x.node_id == startingNode:
-                self.insert(x, 0)
-            else:
-                self.insert(x, float("inf"))
+            self.insert(x)
+        self.distances[startingNode] = 0
+        self.bubbleUp(self.heap[startingNode])
+
         return
 
-# Time: O(logV), simple inserts into the heap and map arrays, then the bubbleUp() gives us the logV
+# Time: O(1), simple inserts into the heap and map arrays
 # Space: O(1), just inserting values into an array is constant
-    def insert(self, node, startingValue):
+    def insert(self, node):
         self.heap.append(node.node_id)
-        self.distances.append(startingValue)
+        self.distances.append(float("inf"))
         self.heapMap.append(node.node_id)
         self.heapMap[node.node_id] = self.size
         self.size += 1
-        self.bubbleUp(self.size - 1)
         return
 
 
