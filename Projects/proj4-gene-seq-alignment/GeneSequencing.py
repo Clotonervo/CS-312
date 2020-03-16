@@ -144,6 +144,7 @@ class GeneSequencing:
         currentTuple = matrix[i][j]
 
         while currentTuple[1] != '$':
+
             if currentTuple[1] == "T":
                 currentAlignment2 = "-" + currentAlignment2
                 currentAlignment1 = sequence1[letterIndex1] + currentAlignment1
@@ -151,7 +152,7 @@ class GeneSequencing:
                 i = i - 1
             elif currentTuple[1] == "L":
                 currentAlignment1 = "-" + currentAlignment1
-                currentAlignment2 = sequence1[letterIndex2] + currentAlignment2
+                currentAlignment2 = sequence2[letterIndex2] + currentAlignment2
                 letterIndex2 -= 1
                 j = j - 1
             else:
@@ -180,7 +181,7 @@ class GeneSequencing:
 
             if abs(len(sequence1) - len(sequence2)) > 3:
                 # print("Sequence 1 length: ", len(sequence1), "/n Sequence 2 length: ", len(sequence2))
-                return float("inf"), "", ""
+                return float("inf"), "No Alignment Possible", "No Alignment Possible"
 
             sequence1 = sequence1[:align_length]
             sequence2 = sequence2[:align_length]
@@ -192,12 +193,21 @@ class GeneSequencing:
 
             matrix = [[(float("inf"), 'X') for j in range(k)] for i in range(len(sequence1) + 1)]
             matrix[0][0] = (0, '$')
+            shift = 0
             for i in range(len(sequence1) + 1):
-                for j in range(len(sequence2) + 1):
+                if i - (len(sequence1) + 1) >= -3:
+                    pass
+                elif i > 3:
+                    shift += 1
+                for j in range(k):
+                    j += shift
                     if i - j > 3:
                         continue
                     elif j - i > 3:
                         break
+                    elif j > len(sequence2):
+                        break
+
                     if i <= 3:
                         newTuple = self.nextValue(i, j, matrix, sequence1, sequence2)
                         if newTuple != 0:
@@ -216,7 +226,13 @@ class GeneSequencing:
                     indexOfBestFit = j - 1
                     break
 
-            # print(bestFit)
+            # print("BestFit: ", bestFit, " Alignment1: ", alignment1, " Alignment2: ", alignment2)
+            print(matrix[len(sequence1) - 4])
+            print(matrix[len(sequence1) - 3])
+            print(matrix[len(sequence1) - 2])
+            print(matrix[len(sequence1) - 1])
+            print(matrix[len(sequence1)])
+            print()
             alignment1, alignment2 = self.getBandwidthAlignments(matrix, sequence1, sequence2, indexOfBestFit)
 
             return bestFit, alignment1, alignment2
@@ -248,7 +264,7 @@ class GeneSequencing:
 
         if validOption:
             if diagonalValid:
-                if sequence1[i -1] == sequence2[j-1]:
+                if sequence1[i -1] == sequence2[j - 1]:
                     diagonalValue = diagonalValue + MATCH
                 else:
                     diagonalValue = diagonalValue + SUB
