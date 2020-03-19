@@ -169,7 +169,6 @@ class GeneSequencing:
                 letterIndex2 -= 1
             currentTuple = matrix[i][j]
 
-
         return currentAlignment1, currentAlignment2
 
 
