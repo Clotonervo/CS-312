@@ -169,8 +169,10 @@ class TSPSolver:
 			if currentSubProblem['cost'] < bssfCost:
 				currentCity = currentSubProblem['current']
 				for city in currentSubProblem['cityList']:
-					if city.costTo()
-
+					if currentCity.costTo(city) < np.inf:
+						newSubProblem = self.reducedCostMatrix(currentCity, city, currentSubProblem['cost'], currentSubProblem['matrix'], currentSubProblem['route'], currentSubProblem['cityList'])
+						heapq.heappush(queue, newSubProblem)
+						
 
 		pass
 
@@ -203,10 +205,43 @@ class TSPSolver:
 		return matrix, lowerBound
 
 
-	def reducedCostMatrix(self, currentInfo):
+	def reducedCostMatrix(self, currentCity, destination, parentCost, parentMatrix, parentRoute, cityList):
 		# Make deep copies of things
-		# Impliment this
+		matrix = parentMatrix.deepcopy()
+		cost = parentCost
+		route = parentRoute.deepcopy()
+		newCityList = cityList.deepcopy()
 
+		cost += matrix[currentCity._index][destination._index]
+		matrix[currentCity._index] = np.inf
+		matrix[:, destination._index] = np.inf
+
+		rowMins = np.min(matrix, 1)
+		reductionCost = 0
+
+		for i in range(len(matrix)):  # Row reductions
+			if rowMins[i] == np.inf:
+				continue
+			reductionCost += rowMins[i]
+			for j in range(len(matrix[i])):
+				matrix[i][j] -= rowMins[i]
+
+		colMins = np.min(matrix, 0)
+
+		for i in range(len(matrix)):  # Column reductions
+			if colMins[i] < np.inf:
+				reductionCost += colMins[i]
+			for j in range(len(matrix[i])):
+				if colMins[j] == np.inf:
+					continue
+				matrix[i][j] -= colMins[j]
+
+		cost += reductionCost
+		route.append(destination)
+		newCityList.remove(destination)
+
+		newSubProblem = {'cost':cost, 'matrix':matrix, 'current':destination, 'cityList':newCityList, 'route':route}
+		return newSubProblem
 
 
 
