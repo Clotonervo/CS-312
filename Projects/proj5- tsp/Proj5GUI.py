@@ -19,10 +19,6 @@ else:
 	raise Exception('Unsupported Version of PyQt: {}'.format(PYQT_VER))
 
 
-#TODO: Error checking on txt boxes
-#TODO: Color strings
-
-
 # Import in the code with the actual implementation
 from TSPSolver import *
 from TSPClasses import *
@@ -208,7 +204,6 @@ class Proj5GUI( QMainWindow ):
 
 	   
 	def newPoints(self):		
-		# TODO - ERROR CHECKING!!!!
 		seed = int(self.curSeed.text())
 		random.seed( seed )
 
@@ -290,7 +285,6 @@ class Proj5GUI( QMainWindow ):
 		self.solver.setupWithScenario(self._scenario)
 
 		max_time = float( self.timeLimit.text() )
-		# TODO - start on a separate thread
 		self.view.clearEdges([(64,64,255)])				# get rid of edge labels but not point labels
 		self.numSolutions.setText( '--' )
 		self.tourCost.setText( '--' )

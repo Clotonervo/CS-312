@@ -81,6 +81,11 @@ class TSPSolver:
 		algorithm</returns> 
 	'''
 
+	# Time: O(n^3), we loop through each city starting with a new one each time, then we loop through each city in
+	#		and see if we can get to it from the current city, and we do that until we reach all the cities, which leaves
+	# 		us looping n^3 times
+	# Space: O(n), each outer loop we store an array of cities that signify the routes of size n, but because we reuse this
+	#		variable, our space complexity is only O(n)
 	def greedy( self,time_allowance=60.0 ):
 
 		results = {}
@@ -91,20 +96,18 @@ class TSPSolver:
 		count = 0
 		start_time = time.time()
 
-		for startCity in cities:
+		for startCity in cities:			# O(n), loops through each city once
 			currentRoute = [startCity]
 			currentCity = startCity
 
-			while len(currentRoute) < ncities:
+			while len(currentRoute) < ncities:	# O(n) loops through up to n times, with currentCity being updated
 				nextDistance = np.inf
 				nextCity = None
-				for cityOption in cities:
+				for cityOption in cities:				# O(n) loops though each city in row and finds the next city to travel to
 					if not (cityOption in currentRoute):
 						if currentCity.costTo(cityOption) < nextDistance:
 							nextDistance = currentCity.costTo(cityOption)
 							nextCity = cityOption
-					else:
-						continue
 
 				if nextDistance == np.inf:
 					break
@@ -112,9 +115,9 @@ class TSPSolver:
 					currentCity = nextCity
 					currentRoute.append(nextCity)
 
-			if len(currentRoute) == ncities:
+			if len(currentRoute) == ncities:					# Solution found!
 				solutionReference = TSPSolution(currentRoute)
-				if solutionReference.cost < bssfCost:
+				if solutionReference.cost < bssfCost:			# Check to see if its the best solution
 					bssfCost = solutionReference.cost
 					bssf = solutionReference
 					count += 1
@@ -144,17 +147,66 @@ class TSPSolver:
 	'''
 		
 	def branchAndBound( self, time_allowance=60.0 ):
-		# foundTour = False;
-		# start_time = time.time()
-		# bssf = None
-		# count = 0
-		# results = {}
-		# cities = self._scenario.getCities()
-		#
-		# while not foundTour and time.time()-start_time < time_allowance:
+		foundTour = False;
+		greedyResults = self.greedy(1000)
+		bssf = greedyResults['soln']
+		bssfCost = greedyResults['cost']
+		count = 0
+		results = {}
+		cities = self._scenario.getCities()
+		queue = []
+
+		startingReducedCostMatrix, lowerBound = self.initReducedCostMatrix(cities)
+		start_time = time.time()
+
+		# cost, current matrix, current city, list of all other cities,
+		startingCity = {'cost':lowerBound, 'matrix':startingReducedCostMatrix, 'current':cities[0], 'cityList':cities[1:], 'route':[cities[0]]}		#FIXME: Figure out if using a dict messes with the heap
+		heapq.heappush(queue, startingCity)
+
+		while time.time()-start_time < time_allowance and (len(queue) > 0):
+			#Figure out how to choose which one to do next
+			currentSubProblem = heapq.heappop(queue)
+			if currentSubProblem['cost'] < bssfCost:
+				currentCity = currentSubProblem['current']
+				for city in currentSubProblem['cityList']:
+					if city.costTo()
 
 
 		pass
+
+
+	def initReducedCostMatrix(self, cities):
+		matrix = [[0 for i in range(len(cities))] for j in range(len(cities))]
+
+		for i in range(len(cities)):
+			for j in range(len(cities)):
+				if i == j:
+					matrix[i][j] = np.inf
+				else:
+					matrix[i][j] = cities[i].costTo(cities[j])
+
+		rowMins = np.min(matrix, 1)
+		lowerBound = 0
+
+		for i in range(len(cities)):			# Row reductions
+			lowerBound += rowMins[i]
+			for j in range(len(cities)):
+				matrix[i][j] -= rowMins[i]
+
+		colMins = np.min(matrix, 0)
+
+		for i in range(len(cities)):			# Column reductions
+			lowerBound += colMins[i]
+			for j in range(len(cities)):
+				matrix[i][j] -= colMins[j]
+
+		return matrix, lowerBound
+
+
+	def reducedCostMatrix(self, currentInfo):
+		# Make deep copies of things
+		# Impliment this
+
 
 
 
