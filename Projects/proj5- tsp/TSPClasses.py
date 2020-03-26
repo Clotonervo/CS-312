@@ -14,6 +14,7 @@ class TSPSolution:
 		self.cost = self._costOfRoute()
 		#print( [c._index for c in listOfCities] )
 
+
 	def _costOfRoute( self ):
 		cost = 0
 		#print('cost = ',cost)
@@ -155,6 +156,9 @@ class City:
 
 	def setScenario( self, scenario ):
 		self._scenario = scenario
+
+	def __lt__(self, other):
+		return self._index < other._index
 
 	''' <summary>
 		How much does it cost to get from this city to the destination?
